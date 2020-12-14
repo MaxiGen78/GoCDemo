@@ -4,10 +4,30 @@
     ViewData["Title"] = "Details";
 }
 
-<h2>Details</h2>
+<h2>@Html.DisplayFor(model => model.ProductName)</h2>
 
 <div>
-    <h4>Product</h4>
+    <div class="container product-details">
+        <div class="row">
+            <div class="product-list">
+                <div class="product-box">
+                    <div class="product-box-image">
+                        <img src="~/images/Image-Coming-Soon.jpg" class="img-responsive" alt="img" />
+                    </div>
+
+                    <div class="product-footer">
+                        <p>@Html.DisplayFor(model => model.ProductDescription)</p>
+                        <p>Price: £@Html.DisplayFor(model => model.ProductPrice)</p>
+                        <p>Type: @Html.DisplayFor(model => model.ProductTypeName)</p>
+                    </div>
+                </div>
+   
+            </div>
+        </div>
+    </div>
+
+
+    @*<h4>Product</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
@@ -35,14 +55,13 @@
             @Html.DisplayFor(model => model.ProductPrice)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.ProductTypeID)
+            @Html.DisplayNameFor(model => model.ProductTypeName)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.ProductTypeID)
+            @Html.DisplayFor(model => model.ProductTypeName)
         </dd>
-    </dl>
+    </dl>*@
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>

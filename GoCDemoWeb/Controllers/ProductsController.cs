@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using GoCDemoLibrary.DataAccess;
 using GoCDemoLibrary.Models;
+using GoCDemoWeb.Models;
 
 namespace GoCDemoWeb.Controllers
 {
@@ -20,33 +21,75 @@ namespace GoCDemoWeb.Controllers
         }
 
         // GET: Products
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string productType, string sortOrder)
         {
-            return View(await _context.Products.ToListAsync());
+            //Filter by Category
+            var ProductTypeList = new List<string>();
+
+            //Get all available Product Types values ordered by Product Type Name
+            var query = from d in _context.ProductTypes
+                           orderby d.ProductTypeName
+                           select d.ProductTypeName;
+
+            //Populate the List with values and make it available for View
+            ProductTypeList.AddRange(query);
+            ViewBag.productType = new SelectList(ProductTypeList);
+
+            //Taken from MS Docs
+            //sortOrder string is coming from page query.
+            //First page load sortOrder is null, so the products will be sorted by name in ascending order as
+            //default in the switch statement.
+            ViewData["NameSortParam"] = string.IsNullOrEmpty(sortOrder) ? "ProductName_desc" : "";
+            ViewData["PriceSortParam"] = sortOrder == "ProductPrice" ? "ProductPrice_desc" : "ProductPrice";
+
+
+            var products = from p in _context.Products
+                           select p;
+
+            //Filter products by selected value from ProductTypeList
+            if (!string.IsNullOrEmpty(productType))
+            {
+                products = products.Where(p => p.ProductTypeName == productType);
+            }
+
+            switch (sortOrder)
+            {
+                case "ProductName_desc":
+                    products = products.OrderByDescending(p => p.ProductName);
+                    break;
+                case "ProductPrice_desc":
+                    products = products.OrderByDescending(p => p.ProductPrice);
+                    break;
+                case "ProductPrice":
+                    products = products.OrderBy(p => p.ProductPrice);
+                    break;
+                default:
+                    products = products.OrderBy(p => p.ProductName);
+                    break;
+            }
+
+            return View(await products.ToListAsync());
         }
 
 
+        // GET: Products/Details/name
+        public async Task<IActionResult> Details(string name)
+        {
+            if (name == null)
+            {
+                return NotFound();
+            }
 
+            var product = await _context.Products
+                .FirstOrDefaultAsync(m => m.ProductNameSlug == name);
+            if (product == null)
+            {
+                return NotFound();
+            }
 
-        //// GET: Products/Details/5
-        //public async Task<IActionResult> Details(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
+            return View(product);
+        }
 
-        //    var product = await _context.Products
-        //        .FirstOrDefaultAsync(m => m.Id == id);
-        //    if (product == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return View(product);
-        //}
-
-        //// GET: Products/Create
         //public IActionResult Create()
         //{
         //    return View();
@@ -57,7 +100,7 @@ namespace GoCDemoWeb.Controllers
         //// more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         //[HttpPost]
         //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Create([Bind("Id,ProductName,ProductDescription,ProductImage,ProductPrice,ProductTypeID")] Product product)
+        //public async Task<IActionResult> Create([Bind("Id,ProductName,ProductDescription,ProductImage,ProductPrice,ProductTypeName")] Product product)
         //{
         //    if (ModelState.IsValid)
         //    {

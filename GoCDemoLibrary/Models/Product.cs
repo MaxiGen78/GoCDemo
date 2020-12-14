@@ -13,6 +13,9 @@ namespace GoCDemoLibrary.Models
         [MaxLength(200)]
         public string ProductName { get; set; }
 
+        [MaxLength(200)]
+        public string ProductNameSlug { get; set; }
+
         [Required]
         public string ProductDescription { get; set; }
 
@@ -23,7 +26,7 @@ namespace GoCDemoLibrary.Models
         public decimal ProductPrice { get; set; }
 
         [Required]
-        public int ProductTypeID { get; set; }
+        public string ProductTypeName { get; set; }
 
         //Navigation property holding other entities (in this case ProductTypes) related to Product
         // According to MS Docs virtual key is needed to take advantage of certain EF functionalities such as 'lazy loading'

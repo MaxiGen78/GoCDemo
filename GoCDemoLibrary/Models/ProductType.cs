@@ -5,7 +5,6 @@ namespace GoCDemoLibrary.Models
     public class ProductType
     {
         public int Id { get; set; }
-        public int ProductTypeId { get; set; }
 
         //Overriding EF default 'nvarchar(max)' with a lesser number of characters for performance purposes
         [MaxLength(50)]

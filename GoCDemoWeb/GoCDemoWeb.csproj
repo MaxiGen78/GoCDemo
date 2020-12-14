@@ -25,4 +25,10 @@
     <ProjectReference Include="..\GoCDemoLibrary\GoCDemoLibrary.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="wwwroot\images\Image-Coming-Soon.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>

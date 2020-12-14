@@ -4,56 +4,53 @@
     ViewData["Title"] = "Index";
 }
 
-<h2>Index</h2>
+<h2>Product List</h2>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.ProductName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ProductDescription)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ProductImage)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ProductPrice)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ProductTypeID)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProductName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProductDescription)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProductImage)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProductPrice)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProductTypeID)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+
+<div class="container">
+    <div class="row">
+        <div class="filters">
+            @using (Html.BeginForm("Index", "Products", FormMethod.Get))
+            {
+                <p>
+                    Product Type: @Html.DropDownList("productType", "All")
+                    <input type="submit" value="Filter" />
+                </p>
+                <p>
+                    Sort By: <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParam"]">Product Name</a>
+                    ||
+                    <a asp-action="Index" asp-route-sortOrder="@ViewData["PriceSortParam"]">Product Price</a>
+                </p>
+
+            }
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="product-list">
+            @foreach (var item in Model)
+            {
+                <div class="col-lg-3 col-md-4 col-sm-6 ">
+                    <a class="product-link" asp-action="Details" asp-route-id="@item.ProductNameSlug">
+                        <div class="product-box">
+
+                            <div class="product-header">
+                                <p>@Html.DisplayFor(modelItem => item.ProductName)</p>
+                            </div>
+
+                            <div class="product-box-image">
+                                <img src="~/images/Image-Coming-Soon.jpg" class="img-responsive" alt="img" />
+                            </div>
+
+                            <div class="product-footer">
+                                <p>Price: £@Html.DisplayFor(modelItem => item.ProductPrice)</p>
+                                <p>Type: @Html.DisplayFor(modelItem => item.ProductTypeName)</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+

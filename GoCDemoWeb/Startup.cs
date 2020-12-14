@@ -60,7 +60,18 @@ namespace GoCDemoWeb
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
+                    name: "Details",
+                    template: "{controller}/{action}/{name}",
+                    defaults: new { controller = "Products", action = "Details" });
+
+                //Set default route to Products
+                routes.MapRoute(
                     name: "default",
+                    template: "{controller}/{action}/{id?}",
+                    defaults: new { controller = "Products", action = "Index"});
+
+                routes.MapRoute(
+                    name: "Home",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
         }
